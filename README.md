@@ -4,7 +4,7 @@ This repository is the official PyTorch implementation of our *NeurIPS(2020)* pa
 
 We will update this page as soon as possible.
 
-![avatar](./thumbnail.png)
+<div align=center><img width="450" height="300" src=./thumbnail.png/></div>
 
 ## Training Datasets
 
