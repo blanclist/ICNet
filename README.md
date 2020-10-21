@@ -132,4 +132,4 @@ You can download predictions of these methods from:
 
 ## Contact
 
-If you have any questions, feel free to contact me (Wen-Da Jin / 金闻达) at jwd331@126.com, I will reply as soon as possible.
+If you have any questions, feel free to contact me (Wen-Da Jin) at jwd331@126.com, I will reply as soon as possible.
