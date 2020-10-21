@@ -36,7 +36,7 @@ You can download them from:
 
 * **[*CoCA*](http://zhaozhang.net/coca.html)** (80 groups, 1295 images) ''Gradient-Induced Co-Saliency Detection, *ECCV(2020)*''
 
-## Pre-trained Model{#pre-trained-model}
+## Pre-trained Model
 
 We provide pre-trained ICNet based on SISMs produced by pre-trained [EGNet](https://github.com/JXingZhao/EGNet) (VGG16-based).
 
