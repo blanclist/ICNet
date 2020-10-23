@@ -17,7 +17,7 @@ train_init_epoch:
 
 train_end_epoch:
     Ending epoch of the training.
-    We recommond you to train ICNet for 50~60 epoches.
+    We recommond you to train ICNet for 50~60 epochs.
 
 train_device:
     Index of GPU used for training.
