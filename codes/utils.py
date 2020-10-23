@@ -12,7 +12,7 @@ def mkdir(path):
 
 """
 write_doc:
-    Write "content" into the file(".txt") with "path".
+    Write "content" into the file(".txt") in "path".
 """
 def write_doc(path, content):
     with open(path, 'a') as file:
@@ -20,7 +20,7 @@ def write_doc(path, content):
 
 """
 get_time:
-    Obtain current time.
+    Obtain the current time.
 """
 def get_time():
     torch.cuda.synchronize()

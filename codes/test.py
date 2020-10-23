@@ -5,28 +5,40 @@ from solver import Solver
 Test settings (used for "test.py"):
 
 test_device:
-    Index of GPU used for test.
+    Index of the GPU used for test.
 
 test_batch_size:
     Test batchsize.
   * When "test_batch_size == None", the dataloader takes the whole image group as a batch to
-    perform test (regardless of the size of image group). If your GPU does not have enough memory,
-    you are suggested to set "test_batch_size" with a specific small number (e.g. test_batch_size = 10).
+    perform the test (regardless of the size of the image group). If your GPU does not have enough memory,
+    you are suggested to set "test_batch_size" with a small number (e.g. test_batch_size = 10).
 
 pred_root:
-    The path of folder used to save predictions (co-saliency maps).
+    Folder path for saving predictions (co-saliency maps).
 
 ckpt_path:
-    The path of checkpoint file (".pth") used for test.
+    Path of the checkpoint file (".pth") loaded for test.
 
 original_size:
-    When "original_size == True", the prediction of ICNet will be resized to the size of input image.
+    When "original_size == True", the prediction (224*224) of ICNet will be resized to the original size.
 
 test_roots:
-    A dictionary including multiple sub-dictionary, each of them contains paths of the test dataset.
-    'img': Images folder path.
-    'sism': SISMs folder path.
-    (SISMs: Single Image Saliency Maps produced by any off-the-shelf SOD model.)
+    A dictionary including multiple sub-dictionary,
+    each sub-dictionary contains the image and SISM folder paths of a specific test dataset.
+    Format:
+    test_roots = {
+        name of dataset_1: {
+            'img': image folder path of dataset_1,
+            'sism': SISM folder path of dataset_1
+        },
+        name of dataset_2: {
+            'img': image folder path of dataset_2,
+            'sism': SISM folder path of dataset_2
+        }
+        .
+        .
+        .
+    }
 """
 
 test_device = '0'
@@ -44,6 +56,7 @@ for dataset in datasets:
     roots = {'img': '/mnt/jwd/data/{}/img_bilinear_224/'.format(dataset),
              'sism': '/mnt/jwd/data/EGNet-SISMs/{}/'.format(dataset)}
     test_roots[dataset] = roots
+# ------------- end -------------
 
 if __name__ == '__main__':
     os.environ['CUDA_VISIBLE_DEVICES'] = test_device

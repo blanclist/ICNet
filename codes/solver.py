@@ -9,13 +9,6 @@ from os.path import join
 import random
 from utils import mkdir, write_doc, get_time
 
-def set_seed(seed):
-     torch.manual_seed(seed)
-     torch.cuda.manual_seed_all(seed)
-     np.random.seed(seed)
-     random.seed(seed)
-    #  torch.backends.cudnn.deterministic = True
-
 
 class Solver(object):
     def __init__(self):
@@ -29,11 +22,11 @@ class Solver(object):
 
         # Load ".pth" to initialize model.
         if init_epoch == 0:
-            # From VGG16.
+            # From pre-trained VGG16.
             self.ICNet.apply(network.weights_init)
             self.ICNet.vgg.vgg.load_state_dict(torch.load(vgg_path))
         else:
-            # From existed checkpoint file.
+            # From the existed checkpoint file.
             ckpt = torch.load(join(ckpt_root, 'Weights_{}.pth'.format(init_epoch)))
             self.ICNet.load_state_dict(ckpt['state_dict'])
             optimizer.load_state_dict(ckpt['optimizer'])
@@ -77,12 +70,12 @@ class Solver(object):
                 optimizer.step()
                 loss_sum = loss_sum + loss.detach().item()
             
-            # Save checkpoint file (".pth") after each epoch.
+            # Save the checkpoint file (".pth") after each epoch.
             mkdir(ckpt_root)
             torch.save({'optimizer': optimizer.state_dict(),
                         'state_dict': self.ICNet.state_dict()}, join(ckpt_root, 'Weights_{}.pth'.format(epoch)))
             
-            # Compute average loss of a batch approximately.
+            # Compute average loss over the training dataset approximately.
             loss_mean = loss_sum / len(train_dataloader)
             end_time = get_time()
 
@@ -92,17 +85,17 @@ class Solver(object):
     
     def test(self, roots, ckpt_path, pred_root, num_thread, batch_size, original_size, pin):
         with torch.no_grad():            
-            # Load checkpoint file(".pth").
+            # Load the specified checkpoint file(".pth").
             state_dict = torch.load(ckpt_path)['state_dict']
             self.ICNet.load_state_dict(state_dict)
             self.ICNet.eval()
             
-            # Get names of test datasets.
+            # Get names of the test datasets.
             datasets = roots.keys()
 
             # Test ICNet on each dataset.
             for dataset in datasets:
-                # Define test dataloader for current dataset.
+                # Define test dataloader for the current test dataset.
                 test_dataloader = get_loader(roots=roots[dataset], 
                                              request=('img', 'sism', 'file_name', 'group_name', 'size'), 
                                              shuffle=False,
@@ -111,7 +104,7 @@ class Solver(object):
                                              batch_size=batch_size, 
                                              pin=pin)
 
-                # Create a folder for the current dataset for saving predictions.
+                # Create a folder for the current test dataset for saving predictions.
                 mkdir(pred_root)
                 cur_dataset_pred_root = join(pred_root, dataset)
                 mkdir(cur_dataset_pred_root)
@@ -125,7 +118,7 @@ class Solver(object):
                                        SISMs=sism, 
                                        is_training=False)
                     
-                    # Create a folder for the current batch acorrding to its "group_name" for saving predictions.
+                    # Create a folder for the current batch according to its "group_name" for saving predictions.
                     group_name = data_batch['group_name'][0]
                     cur_group_pred_root = join(cur_dataset_pred_root, group_name)
                     mkdir(cur_group_pred_root)
@@ -133,12 +126,12 @@ class Solver(object):
                     # preds.shape: [N, 1, H, W]->[N, H, W, 1]
                     preds = preds.permute(0, 2, 3, 1).cpu().numpy()
 
-                    # Make path for each prediction for saving.
+                    # Make paths where predictions will be saved.
                     pred_paths = list(map(lambda file_name: join(cur_group_pred_root, file_name + '.png'), data_batch['file_name']))
                     
                     # For each prediction:
                     for i, pred_path in enumerate(pred_paths):
-                        # Resize the prediction to original size when "original_size == True".
+                        # Resize the prediction to the original size when "original_size == True".
                         H, W = data_batch['size'][0][i], data_batch['size'][1][i]
                         pred = cv2.resize(preds[i], (W, H)) if original_size else preds[i]
 

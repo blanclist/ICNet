@@ -92,8 +92,8 @@ class Res(nn.Module):
 
 """
 Cosal_Module:
-    Given features extracted from VGG16 backbone,
-    exploit SISMs to build intra- and inter-saliency cues.
+    Given features extracted from the VGG16 backbone,
+    exploit SISMs to build intra cues and inter cues.
 """
 class Cosal_Module(nn.Module):
     def __init__(self, H, W):
@@ -128,10 +128,10 @@ class Cosal_Sub_Module(nn.Module):
         N, C, H, W = feats.shape
         HW = H * W
         
-        # Resize SISMs to the same size with the input feats.
+        # Resize SISMs to the same size as the input feats.
         SISMs = resize(SISMs, [H, W])  # shape=[N, 1, H, W]
         
-        # NFs: Normalized features.
+        # NFs: L2-normalized features.
         NFs = F.normalize(feats, dim=1)  # shape=[N, C, H, W]
 
         def CFM(SIVs, NFs):
@@ -143,7 +143,7 @@ class Cosal_Sub_Module(nn.Module):
             # Vectorize and normalize correlation maps.
             correlation_maps = F.normalize(correlation_maps.reshape(N, N, HW), dim=2)  # shape=[N, N, HW]
             
-            # Compute weight vectors [Equation 2].
+            # Compute the weight vectors [Equation 2].
             correlation_matrix = torch.matmul(correlation_maps, correlation_maps.permute(0, 2, 1))  # shape=[N, N, N]
             weight_vectors = correlation_matrix.sum(dim=2).softmax(dim=1)  # shape=[N, N]
 
@@ -162,7 +162,7 @@ class Cosal_Sub_Module(nn.Module):
             SCFs = torch.matmul(NFs.permute(0, 2, 1), NFs).view(N, -1, H, W)  # shape=[N, HW, H, W]
             return SCFs
 
-        # Compute ``SIVs'' [Section 3.2, Equation 1].
+        # Compute SIVs [Section 3.2, Equation 1].
         SIVs = F.normalize((NFs * SISMs).mean(dim=3).mean(dim=2), dim=1).view(N, C, 1, 1)  # shape=[N, C, 1, 1]
 
         # Compute co-salient attention (CSA) maps [Section 3.3].
@@ -171,7 +171,7 @@ class Cosal_Sub_Module(nn.Module):
         # Compute self-correlation features (SCFs) [Section 3.4].
         SCFs = get_SCFs(NFs)  # shape=[N, HW, H, W]
 
-        # Rearrange the channel order of SCFs to build RSCFs [Section 3.4].
+        # Rearrange the channel order of SCFs to obtain RSCFs [Section 3.4].
         evidence = CSA_maps.view(N, HW)  # shape=[N, HW]
         indices = torch.argsort(evidence, dim=1, descending=True).view(N, HW, 1, 1).repeat(1, 1, H, W)  # shape=[N, HW, H, W]
         RSCFs = torch.gather(SCFs, dim=1, index=indices)  # shape=[N, HW, H, W]
@@ -180,7 +180,7 @@ class Cosal_Sub_Module(nn.Module):
 
 """
 Refinement:
-    Decoder block to progressively upsample low-resolution (28*28) co-saliency maps to higher resolution (224*224).
+    U-net like decoder block that fuses co-saliency features and low-level features for upsampling. 
 """
 class Decoder_Block(nn.Module):
     def __init__(self, in_channel):
@@ -197,7 +197,7 @@ class Decoder_Block(nn.Module):
         SISMs = resize(SISMs, [H, W])
         old_feats = resize(old_feats, [H, W])
 
-        # Predict co-saliency maps with spatial size H*W.
+        # Predict co-saliency maps with the size of H*W.
         cmprs = self.cmprs(low_level_feats)
         new_feats = self.merge_conv(torch.cat([cmprs * cosal_map, 
                                                cmprs * SISMs, 
@@ -208,7 +208,7 @@ class Decoder_Block(nn.Module):
 
 """
 ICNet:
-    The entire co-saliency detection model.
+    The entire ICNet.
     Given a group of images and corresponding SISMs, ICNet outputs a group of co-saliency maps (predictions) at once.
 """
 class ICNet(nn.Module):
@@ -233,7 +233,7 @@ class ICNet(nn.Module):
         self.refine_1 = Decoder_Block(64)
 
     def forward(self, image_group, SISMs, is_training):
-        # Extract features from VGG16 backbone.
+        # Extract features from the VGG16 backbone.
         conv1_2 = self.vgg(image_group, 'conv1_1', 'conv1_2_mp') # shape=[N, 64, 224, 224]
         conv2_2 = self.vgg(conv1_2, 'conv1_2_mp', 'conv2_2_mp')  # shape=[N, 128, 112, 112]
         conv3_3 = self.vgg(conv2_2, 'conv2_2_mp', 'conv3_3_mp')  # shape=[N, 256, 56, 56]
@@ -245,17 +245,17 @@ class ICNet(nn.Module):
         conv5_cmprs = self.conv5_cmprs(conv5_3)  # shape=[N, 256, 14, 14]
         conv4_cmprs = self.conv4_cmprs(conv4_3)  # shape=[N, 256, 28, 28]
 
-        # Extract co-saliancy features.
+        # Obtain co-saliancy features.
         cosal_feat_6 = self.Co6(conv6_cmprs, SISMs) # shape=[N, 128, 7, 7]
         cosal_feat_5 = self.Co5(conv5_cmprs, SISMs) # shape=[N, 128, 14, 14]
         cosal_feat_4 = self.Co4(conv4_cmprs, SISMs) # shape=[N, 128, 28, 28]
         
-        # Merge co-saliancy features and predict low-resolution co-saliency maps ("cosal_map_4", 28*28).
+        # Merge co-saliancy features and predict co-saliency maps with size of 28*28 (i.e., "cosal_map_4").
         feat_56 = self.merge_co_56(cosal_feat_5 + resize(cosal_feat_6, [14, 14])) # shape=[N, 128, 14, 14]
         feat_45 = self.merge_co_45(cosal_feat_4 + resize(feat_56, [28, 28]))      # shape=[N, 128, 28, 28]
         cosal_map_4 = self.get_pred_4(feat_45)                                    # shape=[N, 1, 28, 28]
 
-        # Obtain co-saliency maps with original size ("cosal_map_1", 224*224).
+        # Obtain co-saliency maps with size of 224*224 (i.e., "cosal_map_1") by progressively upsampling.
         feat_34, cosal_map_3 = self.refine_3(conv3_3, cosal_map_4, SISMs, feat_45)
         feat_23, cosal_map_2 = self.refine_2(conv2_2, cosal_map_4, SISMs, feat_34)
         _, cosal_map_1 = self.refine_1(conv1_2, cosal_map_4, SISMs, feat_23)      # shape=[N, 1, 224, 224]

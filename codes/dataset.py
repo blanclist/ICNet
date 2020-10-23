@@ -45,7 +45,7 @@ def build_file_paths(base, group_names=None, file_names=None, suffix='.png'):
 
 """
 random_flip:
-    Flip inputs horizontally with a posibility of 0.5.
+    Flip inputs horizontally with a possibility of 0.5.
 """
 def random_flip(img, gt, sism):
     datas = (img, gt, sism)
@@ -112,7 +112,7 @@ class ImageData(data.Dataset):
 
 """
 Cosal_Sampler:
-    Provide indices of each batch, ensuring that each batch data is extracted from the same image group (with same category).
+    Provide indices of each batch, ensuring that each batch data is extracted from the same image group (with the same category).
 """
 class Cosal_Sampler(data.Sampler):
     def __init__(self, indices, shuffle, batch_size):
