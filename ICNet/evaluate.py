@@ -4,17 +4,11 @@ from utils import write_doc
 
 """
 * Note:
-    The main evaluation codes in "./evaluator/" are implemented by PyTorch (GPU-version) for acceleration.
+    The main codes in "./evaluator/" are implemented in PyTorch (GPU-version) for acceleration.
 
     Since some GTs (e.g. in "Cosal2015" dataset) are of too large original sizes to be evaluated on GPU with limited memory 
     (our "TITAN Xp" runs out of 12G memory when computing F-measure), the input prediction map and corresonding GT 
     are resized to 224*224 by our evaluation codes before computing metrics.
-
-    If you want to evluate predictions of original sizes, you might have to:
-    1. transform the evaluation codes into CPU-version and ensure that your computer has enough memory
-    or
-    2. implement "./evaluator/evaluator.py (Line 34)" in a serial manner.
-    However, both of above expediencies waste the GPU's ability of parallel computation and make the evaluation slow. 
 """
 
 """

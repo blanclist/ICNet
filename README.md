@@ -2,6 +2,10 @@
 
 This repository is the official PyTorch implementation of our *NeurIPS(2020)* paper.
 
+You can view this page in Chinese by switching the branch to ICNet-CN.
+
+(您可以通过转换branch到ICNet-CN来查看中文界面)
+
 <div align=center><img width="450" height="300" src=./thumbnail.png/></div>
 
 ## Training Datasets
@@ -94,7 +98,7 @@ python ./ICNet/test.py
 
 ## Evaluation
 
-The folder "./ICNet/evaluator/" contains evaluation codes implemented with PyTorch (GPU-version), the metrics include **max F-measure**, **S-measure** and **MAE**. 
+The folder "./ICNet/evaluator/" contains evaluation codes implemented in PyTorch (GPU-version), the metrics include **max F-measure**, **S-measure** and **MAE**. 
 
 1. Follow instructions in **"./ICNet/evaluate.py"** to modify evaluation settings.
 
