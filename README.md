@@ -86,7 +86,7 @@ python ./ICNet/train.py
 
    * Test ICNet **trained by yourself**:
 
-     Choose the checkpoint file ***"Weights_i.pth"***  (saved after i-th epoch automatically) you want to load for the test.
+     Choose the checkpoint file ***"Weights_i.pth"***  (saved after i-th epoch automatically) you want to load for test.
 
 2. Follow instructions in **"./ICNet/test.py"** to modify test settings.
 
