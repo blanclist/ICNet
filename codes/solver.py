@@ -15,23 +15,23 @@ class Solver(object):
         self.ICNet = network.ICNet().cuda()
 
     def train(self, roots, init_epoch, end_epoch, learning_rate, batch_size, weight_decay, ckpt_root, doc_path, num_thread, pin, vgg_path=None):
-        # Define Adam optimizer.
+        # 定义Adam优化器.
         optimizer = Adam(self.ICNet.parameters(),
                          lr=learning_rate, 
                          weight_decay=weight_decay)
 
-        # Load ".pth" to initialize model.
+        # 加载 ".pth" 以初始化模型.
         if init_epoch == 0:
-            # From pre-trained VGG16.
+            # 从预训练的VGG16中加载.
             self.ICNet.apply(network.weights_init)
             self.ICNet.vgg.vgg.load_state_dict(torch.load(vgg_path))
         else:
-            # From the existed checkpoint file.
+            # 从已有的检查点文件中加载.
             ckpt = torch.load(join(ckpt_root, 'Weights_{}.pth'.format(init_epoch)))
             self.ICNet.load_state_dict(ckpt['state_dict'])
             optimizer.load_state_dict(ckpt['optimizer'])
 
-        # Define training dataloader.
+        # 定义training dataloader.
         train_dataloader = get_loader(roots=roots,
                                       request=('img', 'gt', 'sism'),
                                       shuffle=True,
@@ -40,7 +40,7 @@ class Solver(object):
                                       num_thread=num_thread,
                                       pin=pin)
         
-        # Train.
+        # 训练.
         self.ICNet.train()
         for epoch in range(init_epoch + 1, end_epoch):
             start_time = get_time()
@@ -49,53 +49,53 @@ class Solver(object):
             for data_batch in train_dataloader:
                 self.ICNet.zero_grad()
 
-                # Obtain a batch of data.
+                # 获得一个batch的数据.
                 img, gt, sism = data_batch['img'], data_batch['gt'], data_batch['sism']
                 img, gt, sism = img.cuda(), gt.cuda(), sism.cuda()
 
                 if len(img) == 1:
-                    # Skip this iteration when training batchsize is 1 due to Batch Normalization. 
+                    # Batch Normalization在训练时不支持batchsize为1, 因此直接跳过该样本的训练. 
                     continue
                 
-                # Forward.
+                # 前向传播.
                 preds_list = self.ICNet(image_group=img,
                                         SISMs=sism, 
                                         is_training=True)
                 
-                # Compute IoU loss.
+                # 计算IoU loss.
                 loss = IoU_loss(preds_list, gt)
 
-                # Backward.
+                # 反向传播.
                 loss.backward()
                 optimizer.step()
                 loss_sum = loss_sum + loss.detach().item()
             
-            # Save the checkpoint file (".pth") after each epoch.
+            # 在每个epoch的训练后都保存检查点文件(".pth").
             mkdir(ckpt_root)
             torch.save({'optimizer': optimizer.state_dict(),
                         'state_dict': self.ICNet.state_dict()}, join(ckpt_root, 'Weights_{}.pth'.format(epoch)))
             
-            # Compute average loss over the training dataset approximately.
+            # 近似地计算训练集的平均损失.
             loss_mean = loss_sum / len(train_dataloader)
             end_time = get_time()
 
-            # Record training information (".txt").
+            # 记录训练的信息到".txt"文档中.
             content = 'CkptIndex={}:    TrainLoss={}    LR={}    Time={}\n'.format(epoch, loss_mean, learning_rate, end_time - start_time)
             write_doc(doc_path, content)
     
     def test(self, roots, ckpt_path, pred_root, num_thread, batch_size, original_size, pin):
         with torch.no_grad():            
-            # Load the specified checkpoint file(".pth").
+            # 加载指定的检查点文件(".pth").
             state_dict = torch.load(ckpt_path)['state_dict']
             self.ICNet.load_state_dict(state_dict)
             self.ICNet.eval()
             
-            # Get names of the test datasets.
+            # 得到test datasets的名字.
             datasets = roots.keys()
 
-            # Test ICNet on each dataset.
+            # 在每个dataset上对ICNet进行测试.
             for dataset in datasets:
-                # Define test dataloader for the current test dataset.
+                # 对当前dataset定义test dataloader.
                 test_dataloader = get_loader(roots=roots[dataset], 
                                              request=('img', 'sism', 'file_name', 'group_name', 'size'), 
                                              shuffle=False,
@@ -104,21 +104,21 @@ class Solver(object):
                                              batch_size=batch_size, 
                                              pin=pin)
 
-                # Create a folder for the current test dataset for saving predictions.
+                # 为当前的dataset创建文件夹以保存之后产生的预测图.
                 mkdir(pred_root)
                 cur_dataset_pred_root = join(pred_root, dataset)
                 mkdir(cur_dataset_pred_root)
 
                 for data_batch in test_dataloader:
-                    # Obtain a batch of data.
+                    # 获得一个batch的数据.
                     img, sism = data_batch['img'].cuda(), data_batch['sism'].cuda()
 
-                    # Forward.
+                    # 前向传播.
                     preds = self.ICNet(image_group=img, 
                                        SISMs=sism, 
                                        is_training=False)
                     
-                    # Create a folder for the current batch according to its "group_name" for saving predictions.
+                    # 根据当前的batch所属的group创建文件夹, 以保存之后产生的预测图.
                     group_name = data_batch['group_name'][0]
                     cur_group_pred_root = join(cur_dataset_pred_root, group_name)
                     mkdir(cur_group_pred_root)
@@ -126,14 +126,14 @@ class Solver(object):
                     # preds.shape: [N, 1, H, W]->[N, H, W, 1]
                     preds = preds.permute(0, 2, 3, 1).cpu().numpy()
 
-                    # Make paths where predictions will be saved.
+                    # 制作预测图的保存路径.
                     pred_paths = list(map(lambda file_name: join(cur_group_pred_root, file_name + '.png'), data_batch['file_name']))
                     
-                    # For each prediction:
+                    # 对每个预测图:
                     for i, pred_path in enumerate(pred_paths):
-                        # Resize the prediction to the original size when "original_size == True".
+                        # 当 "original_size == True" 时, 将224*224大小的预测图缩放到原图尺寸.
                         H, W = data_batch['size'][0][i], data_batch['size'][1][i]
                         pred = cv2.resize(preds[i], (W, H)) if original_size else preds[i]
 
-                        # Save the prediction.
+                        # 保存预测图.
                         cv2.imwrite(pred_path, np.array(pred * 255))

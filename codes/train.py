@@ -2,35 +2,35 @@ import os
 from solver import Solver
 
 """
-Training settings (used for "train.py"):
+训练设置(适用于 "train.py"):
 
 vgg_path:
-    Path of pre-trained VGG16 (".pth") used to initialize ICNet at the start of training.
+    预训练VGG16(".pth")的路径, 用于初始化参数来训练您自己的ICNet.
 
 ckpt_root:
-    Folder path where the checkpoint files (".pth") are saved.
-    After the i-th training epoch, the checkpoint file is saved to "ckpt_root/Weights_{}.pth".format(i).
+    保存检查点文件(".pth")的文件夹路径, 每个epoch训练后都会自动保存.
+    第i个epoch训练完成后, 检查点文件会被保存在 "ckpt_root/Weights_{}.pth".format(i).
 
 train_init_epoch:
-    The starting epoch of training.
-    When "train_init_epoch == 0", ICNet is initialized with pre-trained VGG16;
-    Otherwise, ICNet loads checkpoint file from "ckpt_root/Weights_{}.pth".format(train_init_epoch) for initialization,
+    训练的起始epoch.
+    当 "train_init_epoch == 0" 时, ICNet用预训练的VGG16的参数进行初始化;
+    否则, ICNet加载 "ckpt_root/Weights_{}.pth".format(train_init_epoch) 处的检查点文件(".pth")来进行初始化,
 
 train_end_epoch:
-    The ending epoch of training.
-    We recommend you to train ICNet for 50~60 epochs.
+    训练的结束epoch.
+    建议您训练50~60个epochs.
 
 train_device:
-    Index of the GPU used for training.
+    用于训练的GPU编号.
 
 train_doc_path:
-    The file (".txt") path used to save the training information.
+    用于保存训练过程所产生信息的文件(".txt"文档)路径.
 
 train_roots:
-    A dictionary containing image, GT and SISM folder paths of the training dataset.
-    train_roots = {'img': image folder path of training dataset,
-                   'gt': GT folder path of training dataset,
-                   'sism': SISM folder path of training dataset}
+    一个dict, 包含训练集图片, GTs和SISMs的文件夹路径, 其格式为:
+    train_roots = {'img': 训练集的图片的文件夹路径,
+                   'gt': 训练集的GTs的文件夹路径,
+                   'sism': 训练集的SISMs的文件夹路径}
 """
 
 vgg_path = './vgg16_feat.pth'
@@ -44,11 +44,11 @@ weight_decay = 1e-4
 train_batch_size = 10
 train_num_thread = 4
 
-# An example to build "train_roots".
+# 下面是一个构建 "train_roots" 的例子.
 train_roots = {'img': '/mnt/jwd/data/COCO9213/img_bilinear_224/',
                'gt': '/mnt/jwd/data/COCO9213/gt_bilinear_224/',
                'sism': '/mnt/jwd/data/EGNet-SISMs/COCO9213/'}
-# ------------- end -------------
+# ------------ 示例结束 ------------
 
 if __name__ == '__main__':
     os.environ['CUDA_VISIBLE_DEVICES'] = train_device

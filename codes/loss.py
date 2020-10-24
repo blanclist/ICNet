@@ -2,7 +2,7 @@ import torch
 
 """
 IoU_loss:
-    Compute IoU loss between predictions and ground-truths for training [Equation 3].
+    计算预测图和GTs之间的IoU损失 [式3].
 """
 def IoU_loss(preds_list, gt):
     preds = torch.cat(preds_list, dim=1)

@@ -2,38 +2,35 @@ import os
 from solver import Solver
 
 """
-Test settings (used for "test.py"):
+测试设置(适用于 "test.py"):
 
 test_device:
-    Index of the GPU used for test.
+    用于测试的GPU编号.
 
 test_batch_size:
-    Test batchsize.
-  * When "test_batch_size == None", the dataloader takes the whole image group as a batch to
-    perform the test (regardless of the size of the image group). If your GPU does not have enough memory,
-    you are suggested to set "test_batch_size" with a small number (e.g. test_batch_size = 10).
+    测试时的batchsize.
+  * 当 "test_batch_size == None" 时, dataloader直接将整个图片组作为一个batch来进行测试(不论这个图片组包含多少张图片).
+    如果您的GPU没有足够的显存, 您可以为 "test_batch_size" 指定一个较小的值(例如 test_batch_size = 10).
 
 pred_root:
-    Folder path for saving predictions (co-saliency maps).
+    用于保存预测图(co-saliency maps)的文件夹路径.
 
 ckpt_path:
-    Path of the checkpoint file (".pth") loaded for test.
+    待测试的".pth"文件的路径.
 
 original_size:
-    When "original_size == True", the prediction (224*224) of ICNet will be resized to the original size.
+    当 "original_size == True" 时, ICNet产生的预测图(224*224)会被缩放至原图尺寸后再保存.
 
 test_roots:
-    A dictionary including multiple sub-dictionary,
-    each sub-dictionary contains the image and SISM folder paths of a specific test dataset.
-    Format:
+    一个包含多个子dict的dict, 其中每个子dict应包含某个数据集的图片和对应SISMs的文件夹路径, 其格式为:
     test_roots = {
-        name of dataset_1: {
-            'img': image folder path of dataset_1,
-            'sism': SISM folder path of dataset_1
+        数据集1的名称: {
+            'img': 数据集1的图片的文件夹路径,
+            'sism': 数据集1的SISMs的文件夹路径
         },
-        name of dataset_2: {
-            'img': image folder path of dataset_2,
-            'sism': SISM folder path of dataset_2
+        数据集2的名称: {
+            'img': 数据集2的图片的文件夹路径,
+            'sism': 数据集2的SISMs的文件夹路径
         }
         .
         .
@@ -48,7 +45,7 @@ ckpt_path = './ICNet_vgg16.pth'
 original_size = False
 test_num_thread = 4
 
-# An example to build "test_roots".
+# 下面是一个构建 "test_roots" 的例子.
 test_roots = dict()
 datasets = ['MSRC', 'iCoSeg', 'CoSal2015', 'CoSOD3k', 'CoCA']
 
@@ -56,7 +53,7 @@ for dataset in datasets:
     roots = {'img': '/mnt/jwd/data/{}/img_bilinear_224/'.format(dataset),
              'sism': '/mnt/jwd/data/EGNet-SISMs/{}/'.format(dataset)}
     test_roots[dataset] = roots
-# ------------- end -------------
+# ------------ 示例结束 ------------
 
 if __name__ == '__main__':
     os.environ['CUDA_VISIBLE_DEVICES'] = test_device

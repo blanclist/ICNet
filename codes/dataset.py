@@ -14,9 +14,9 @@ from os import listdir
 
 """
 build_file_paths:
-    When "file_names == None and group_names == None", 
-    traverse file folder to build "file_paths", "group_names", "file_names" and "indices".
-    Otherwise, build "file_paths" based on given "file_names" and "group_names".
+    当 "file_names == None and group_names == None" 时, 
+    遍历 "base" 中的文件以构建 "file_paths", "group_names", "file_names" and "indices".
+    否则, 基于给定的 "file_names" 和 "group_names" 来构建 "file_paths".
 """
 def build_file_paths(base, group_names=None, file_names=None, suffix='.png'):
     if file_names == None and group_names == None:
@@ -30,7 +30,7 @@ def build_file_paths(base, group_names=None, file_names=None, suffix='.png'):
             group_file_names = listdir(group_path)
             cur_group_end_index += len(group_file_names)
 
-            # Save the ending index of current group into "indices", which is prepared for "Cosal_Sampler".
+            # 将当前图片组最后一张图片在整个数据集中的下标保存在 "indices" 中, 这部分信息是为 "Cosal_Sampler" 而准备的.
             indices.append(cur_group_end_index)
             
             for file_name in group_file_names:
@@ -45,7 +45,7 @@ def build_file_paths(base, group_names=None, file_names=None, suffix='.png'):
 
 """
 random_flip:
-    Flip inputs horizontally with a possibility of 0.5.
+    以 0.5 的概率对输入数据进行随机水平翻转.
 """
 def random_flip(img, gt, sism):
     datas = (img, gt, sism)
@@ -112,7 +112,7 @@ class ImageData(data.Dataset):
 
 """
 Cosal_Sampler:
-    Provide indices of each batch, ensuring that each batch data is extracted from the same image group (with the same category).
+    提供每个batch的下标, 确保每个batch中的数据都来自于同一个图片组(属于同一个类别).
 """
 class Cosal_Sampler(data.Sampler):
     def __init__(self, indices, shuffle, batch_size):
@@ -126,21 +126,21 @@ class Cosal_Sampler(data.Sampler):
     def reset_batches_indices(self):
         batches_indices = []
         start_idx = 0
-        # For each image group (with same category):
+        # 对每个图片组(属于同一个类别):
         for end_idx in self.indices:
-            # Initalize "group_indices".
+            # 初始化 "group_indices".
             group_indices = list(range(start_idx, end_idx))
             
-            # Shuffle "group_indices" if needed.
+            # 如果 "self.shuffle == True" 则打乱 "group_indices" (打乱一组内的图片顺序).
             if self.shuffle:
                 np.random.shuffle(group_indices)
             
-            # Get the size of current image group.
+            # 获取当前图片组的容量大小.
             num = end_idx - start_idx
 
-            # Split "group_indices" to multiple batches according to "self.batch_size",
-            # then append the splited indices ("batch_indices") to "batches_indices".
-            # Note that, when "self.batch_size == None", each image group is regarded as a batch ("batch_size = num").
+            # 根据 "self.batch_size" 将 "group_indices" 划分为多个batches,
+            # 然后将划分好的结果(即 "batch_indices")添加到 "batches_indices" 中.
+            # 注意, 当 "self.batch_size == None" 时, 每个图片组都被直接作为一个batch (即 "batch_size = num").
             idx = 0
             while idx < num:
                 batch_size = num if self.batch_size == None else self.batch_size
@@ -149,9 +149,9 @@ class Cosal_Sampler(data.Sampler):
                 idx += batch_size
             start_idx = end_idx
 
-        # Each entry of "batches_indices" is a list indicating indices of a specific batch,
-        # but neighbouring entries basically belongs to the same image group (with same category).
-        # Thus, shuffle "batches_indices" if needed. 
+        # "batches_indices" 中的每个元素都是一个list, 表示某一batch的下标索引集合,
+        # 但相邻的list基本上来自于同一个图片组(属于同一类别).
+        # 因此, 当 "self.shuffle == True" 时, 进一步对 "batches_indices" 打乱 (打乱batch之间的顺序). 
         if self.shuffle:
             np.random.shuffle(batches_indices)
         

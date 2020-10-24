@@ -9,14 +9,14 @@ np.set_printoptions(suppress=True, threshold=1e5)
 
 """
 resize:
-    Resize tensor (shape=[N, C, H, W]) to the target size (default: 224*224).
+    将tensor (shape=[N, C, H, W]) 双线性放缩到 "target_size" 大小 (默认: 224*224).
 """
 def resize(input, target_size=(224, 224)):
     return F.interpolate(input, (target_size[0], target_size[1]), mode='bilinear', align_corners=True)
 
 """
 weights_init:
-    Weights initialization.
+    权重初始化.
 """
 def weights_init(module):
     if isinstance(module, nn.Conv2d):
@@ -62,7 +62,7 @@ class VGG16(nn.Module):
 
 """
 Prediction:
-    Compress the channel of input features to 1, then predict maps with sigmoid function.
+    将输入特征的通道压缩到1维, 然后利用sigmoid函数产生预测图.
 """
 class Prediction(nn.Module):
     def __init__(self, in_channel):
@@ -76,7 +76,7 @@ class Prediction(nn.Module):
 
 """
 Res:
-    Two convolutional layers with residual structure.
+    带有残差结构的卷积层.
 """
 class Res(nn.Module):
     def __init__(self, in_channel):
@@ -92,8 +92,8 @@ class Res(nn.Module):
 
 """
 Cosal_Module:
-    Given features extracted from the VGG16 backbone,
-    exploit SISMs to build intra cues and inter cues.
+    给定从VGG16中抽取出的特征，
+    利用SISMs构建intra cues和inter cues.
 """
 class Cosal_Module(nn.Module):
     def __init__(self, H, W):
@@ -102,21 +102,21 @@ class Cosal_Module(nn.Module):
         self.conv = nn.Sequential(nn.Conv2d(256, 128, 1), Res(128))
 
     def forward(self, feats, SISMs):
-        # Get foreground co-saliency features.
+        # 获取foreground co-saliency features.
         fore_cosal_feats = self.cosal_feat(feats, SISMs)
 
-        # Get background co-saliency features.
+        # 获取background co-saliency features.
         back_cosal_feats = self.cosal_feat(feats, 1.0 - SISMs)
         
-        # Fuse foreground and background co-saliency features
-        # to generate co-saliency enhanced features.
+        # 融合 "fore_cosal_feats" 和 "fore_cosal_feats",
+        # 产生co-saliency enhanced features.
         cosal_enhanced_feats = self.conv(torch.cat([fore_cosal_feats, back_cosal_feats], dim=1))
         return cosal_enhanced_feats
 
 """
 Cosal_Sub_Module:
-  * The kernel module of ICNet.
-    Generate foreground/background co-salient features by using SISMs.
+  * ICNet的核心单元.
+    利用SISMs产生foreground/background co-salient features.
 """
 class Cosal_Sub_Module(nn.Module):
     def __init__(self, H, W):
@@ -128,29 +128,29 @@ class Cosal_Sub_Module(nn.Module):
         N, C, H, W = feats.shape
         HW = H * W
         
-        # Resize SISMs to the same size as the input feats.
+        # 将SISMs调整到和输入特征feats一样的尺度.
         SISMs = resize(SISMs, [H, W])  # shape=[N, 1, H, W]
         
-        # NFs: L2-normalized features.
+        # NFs: L2标准化(normalize)后的特征.
         NFs = F.normalize(feats, dim=1)  # shape=[N, C, H, W]
 
         def CFM(SIVs, NFs):
-            # Compute correlation maps [Figure 4] between SIVs and pixel-wise feature vectors in NFs by inner product.
-            # We implement this process by ``F.conv2d()'', which takes SIVs as 1*1 kernels to convolve NFs.
+            # 计算SIVs和NFs中每个像素的内积, 产生correlation maps [图4].
+            # 我们通过 ``F.conv2d()'' 来实现这一过程, 其中将SIVs作为1*1卷积的参数对NFs进行卷积.
             NFs = NFs.permute(1, 2, 3, 0).reshape(1, C, HW, N)  # shape=[1, C, HW, N]
             correlation_maps = F.conv2d(NFs, weight=SIVs).permute(3, 1, 2, 0)  # shape=[N, N, HW, 1]
             
-            # Vectorize and normalize correlation maps.
+            # 向量化(vectorize)并标准化(normalize) correlation maps.
             correlation_maps = F.normalize(correlation_maps.reshape(N, N, HW), dim=2)  # shape=[N, N, HW]
             
-            # Compute the weight vectors [Equation 2].
+            # 计算权重向量(weight vectors) [式2].
             correlation_matrix = torch.matmul(correlation_maps, correlation_maps.permute(0, 2, 1))  # shape=[N, N, N]
             weight_vectors = correlation_matrix.sum(dim=2).softmax(dim=1)  # shape=[N, N]
 
-            # Fuse correlation maps with the weight vectors to build co-salient attention (CSA) maps.
+            # 根据权重向量(weight vectors)对correlation maps进行融合, 产生co-salient attention (CSA) maps.
             CSA_maps = torch.sum(correlation_maps * weight_vectors.view(N, N, 1), dim=1)  # shape=[N, HW]
             
-            # Max-min normalize CSA maps.
+            # Max-min normalize CSA maps (将CSA maps的范围拉伸至0~1之间).
             min_value = torch.min(CSA_maps, dim=1, keepdim=True)[0]
             max_value = torch.max(CSA_maps, dim=1, keepdim=True)[0]
             CSA_maps = (CSA_maps - min_value) / (max_value - min_value + 1e-12)  # shape=[N, HW]
@@ -162,16 +162,16 @@ class Cosal_Sub_Module(nn.Module):
             SCFs = torch.matmul(NFs.permute(0, 2, 1), NFs).view(N, -1, H, W)  # shape=[N, HW, H, W]
             return SCFs
 
-        # Compute SIVs [Section 3.2, Equation 1].
+        # 计算 SIVs [3.2节, 式1].
         SIVs = F.normalize((NFs * SISMs).mean(dim=3).mean(dim=2), dim=1).view(N, C, 1, 1)  # shape=[N, C, 1, 1]
 
-        # Compute co-salient attention (CSA) maps [Section 3.3].
+        # 计算 co-salient attention (CSA) maps [3.3节].
         CSA_maps = CFM(SIVs, NFs)  # shape=[N, 1, H, W]
 
-        # Compute self-correlation features (SCFs) [Section 3.4].
+        # 计算 self-correlation features (SCFs) [3.4节].
         SCFs = get_SCFs(NFs)  # shape=[N, HW, H, W]
 
-        # Rearrange the channel order of SCFs to obtain RSCFs [Section 3.4].
+        # 重排列(Rearrange)SCFs的通道顺序, 产生RSCFs [3.4节].
         evidence = CSA_maps.view(N, HW)  # shape=[N, HW]
         indices = torch.argsort(evidence, dim=1, descending=True).view(N, HW, 1, 1).repeat(1, 1, H, W)  # shape=[N, HW, H, W]
         RSCFs = torch.gather(SCFs, dim=1, index=indices)  # shape=[N, HW, H, W]
@@ -180,7 +180,7 @@ class Cosal_Sub_Module(nn.Module):
 
 """
 Refinement:
-    U-net like decoder block that fuses co-saliency features and low-level features for upsampling. 
+    U-net风格的decoder block, 融合co-saliency features和low-level features以进行上采样.
 """
 class Decoder_Block(nn.Module):
     def __init__(self, in_channel):
@@ -192,12 +192,12 @@ class Decoder_Block(nn.Module):
 
     def forward(self, low_level_feats, cosal_map, SISMs, old_feats):
         _, _, H, W = low_level_feats.shape
-        # Adjust cosal_map, SISMs and old_feats to the same spatial size as low_level_feats.
+        # 调整cosal_map, SISMs和old_feats的大小, 使其与low_level_feats的大小一致.
         cosal_map = resize(cosal_map, [H, W])
         SISMs = resize(SISMs, [H, W])
         old_feats = resize(old_feats, [H, W])
 
-        # Predict co-saliency maps with the size of H*W.
+        # 预测大小为H*W的co-saliency maps.
         cmprs = self.cmprs(low_level_feats)
         new_feats = self.merge_conv(torch.cat([cmprs * cosal_map, 
                                                cmprs * SISMs, 
@@ -208,8 +208,8 @@ class Decoder_Block(nn.Module):
 
 """
 ICNet:
-    The entire ICNet.
-    Given a group of images and corresponding SISMs, ICNet outputs a group of co-saliency maps (predictions) at once.
+    整体的ICNet.
+    对给定的一组图片和对应的SISMs, ICNet一次性输出这一组的co-saliency maps(预测图).
 """
 class ICNet(nn.Module):
     def __init__(self):
@@ -233,34 +233,34 @@ class ICNet(nn.Module):
         self.refine_1 = Decoder_Block(64)
 
     def forward(self, image_group, SISMs, is_training):
-        # Extract features from the VGG16 backbone.
+        # 从VGG16 backbone中提取特征.
         conv1_2 = self.vgg(image_group, 'conv1_1', 'conv1_2_mp') # shape=[N, 64, 224, 224]
         conv2_2 = self.vgg(conv1_2, 'conv1_2_mp', 'conv2_2_mp')  # shape=[N, 128, 112, 112]
         conv3_3 = self.vgg(conv2_2, 'conv2_2_mp', 'conv3_3_mp')  # shape=[N, 256, 56, 56]
         conv4_3 = self.vgg(conv3_3, 'conv3_3_mp', 'conv4_3_mp')  # shape=[N, 512, 28, 28]
         conv5_3 = self.vgg(conv4_3, 'conv4_3_mp', 'conv5_3_mp')  # shape=[N, 512, 14, 14]
 
-        # Compress the channels of high-level features.
+        # 对high-level features的特征先进行一次压缩.
         conv6_cmprs = self.conv6_cmprs(conv5_3)  # shape=[N, 128, 7, 7]
         conv5_cmprs = self.conv5_cmprs(conv5_3)  # shape=[N, 256, 14, 14]
         conv4_cmprs = self.conv4_cmprs(conv4_3)  # shape=[N, 256, 28, 28]
 
-        # Obtain co-saliancy features.
+        # 获得co-saliancy features.
         cosal_feat_6 = self.Co6(conv6_cmprs, SISMs) # shape=[N, 128, 7, 7]
         cosal_feat_5 = self.Co5(conv5_cmprs, SISMs) # shape=[N, 128, 14, 14]
         cosal_feat_4 = self.Co4(conv4_cmprs, SISMs) # shape=[N, 128, 28, 28]
         
-        # Merge co-saliancy features and predict co-saliency maps with size of 28*28 (i.e., "cosal_map_4").
+        # 融合co-saliancy features并预测尺度为28*28的co-saliency maps(即, "cosal_map_4").
         feat_56 = self.merge_co_56(cosal_feat_5 + resize(cosal_feat_6, [14, 14])) # shape=[N, 128, 14, 14]
         feat_45 = self.merge_co_45(cosal_feat_4 + resize(feat_56, [28, 28]))      # shape=[N, 128, 28, 28]
         cosal_map_4 = self.get_pred_4(feat_45)                                    # shape=[N, 1, 28, 28]
 
-        # Obtain co-saliency maps with size of 224*224 (i.e., "cosal_map_1") by progressively upsampling.
+        # 通过逐渐上采样来获得尺度为224*224的co-saliency maps(即, "cosal_map_1").
         feat_34, cosal_map_3 = self.refine_3(conv3_3, cosal_map_4, SISMs, feat_45)
         feat_23, cosal_map_2 = self.refine_2(conv2_2, cosal_map_4, SISMs, feat_34)
         _, cosal_map_1 = self.refine_1(conv1_2, cosal_map_4, SISMs, feat_23)      # shape=[N, 1, 224, 224]
 
-        # Return predicted co-saliency maps.
+        # 返回预测的co-saliency maps.
         if is_training:
             preds_list = [resize(cosal_map_4), resize(cosal_map_3), resize(cosal_map_2), cosal_map_1]
             return preds_list
