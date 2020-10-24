@@ -2,9 +2,9 @@
 
 This repository is the official PyTorch implementation of our *NeurIPS(2020)* paper.
 
-You can switch the branch to "CN", to view README.md in Chinese and obtain codes with Chinese comments.
+You can switch the branch to "CN", to view README.md (Chinese version) and obtain codes with Chinese comments.
 
-(您可以将 branch 切换到 "CN", 以查看中文界面并获取带有中文注释的代码)
+(您可以将 branch 切换到 "CN", 以查看中文版 README.md 并获取带有中文注释的代码)
 
 <div align=center><img width="450" height="300" src=./thumbnail.png/></div>
 
