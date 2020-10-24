@@ -2,9 +2,9 @@
 
 本页提供了我们在 *NeurIPS(2020)* 所发表论文的 PyTorch 官方实现。
 
-您可以通过切换 branch 到 "ICNet" 来查看英文界面。
+您可以通过切换 branch 到 "EN" , 以查看英文版 README.md 并获取带有英文注释的代码。
 
-(You can view this page in English by switching the branch to "ICNet")
+(You can switch the branch to "EN", to view README.md (English version) and obtain codes with English comments)
 
 <div align=center><img width="450" height="300" src=./thumbnail.png/></div>
 
