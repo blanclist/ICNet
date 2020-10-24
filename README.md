@@ -70,12 +70,12 @@ ICNet 可以基于任意现成 SOD 方法产生的 SISMs 进行训练和测试�
 
    ***vgg16_feat.pth*** (56MB) [GoogleDrive](https://drive.google.com/file/d/1ej5ngj2NYH-R-0GfYUDfuM-DNLuFolED/view?usp=sharing) | [BaiduYun](https://pan.baidu.com/s/1S_D6qCE2vn_okBhT1Zg72g) (提取码: imsf)。
 
-2. 根据 **"./ICNet-CN/codes/train.py"** 中的说明修改训练设置。
+2. 根据 **"./ICNet/train.py"** 中的说明修改训练设置。
 
 3. 运行：
 
 ```
-python ./ICNet-CN/codes/train.py
+python ./ICNet/train.py
 ```
 
 ### 测试
@@ -88,24 +88,24 @@ python ./ICNet-CN/codes/train.py
 
      选择您想要加载的检查点文件 ***"Weights_i.pth"***  (在第 i 个 epoch 训练后会自动保存)。
 
-2. 根据 **"./ICNet-CN/codes/test.py"** 中的说明修改测试设置。
+2. 根据 **"./ICNet/test.py"** 中的说明修改测试设置。
 
 3. 运行：
 
 ```
-python ./ICNet-CN/codes/test.py
+python ./ICNet/test.py
 ```
 
 ## 评测
 
-文件夹 "./ICNet-CN/codes/evaluator/" 包含了用 PyTorch (GPU版本) 实现的评测代码, 评测指标有 **max F-measure**, **S-measure** 以及 **MAE** 。
+文件夹 "./ICNet/evaluator/" 包含了用 PyTorch (GPU版本) 实现的评测代码, 评测指标有 **max F-measure**, **S-measure** 以及 **MAE** 。
 
-1. 根据 **"./ICNet-CN/codes/evaluate.py"** 中的说明修改评测设置。
+1. 根据 **"./ICNet/evaluate.py"** 中的说明修改评测设置。
 
 2. 运行：
 
 ```
-python ./ICNet-CN/codes/evaluate.py
+python ./ICNet/evaluate.py
 ```
 
 ## 比较的方法
