@@ -28,9 +28,9 @@
 
 您可以从下面的链接进行下载：
 
-***test-datasets*** (放缩至224*224，77MB)，[GoogleDrive](https://drive.google.com/drive/folders/1bjI2msek72dOejmK796tXyjFPIE27267?usp=sharing) | [BaiduYun](https://pan.baidu.com/s/1KX7m0g9mgACoTMgkbIjRvw) (提取码：oq5w)。
+* ***test-datasets*** (放缩至224*224，77MB)，[GoogleDrive](https://drive.google.com/drive/folders/1bjI2msek72dOejmK796tXyjFPIE27267?usp=sharing) | [BaiduYun](https://pan.baidu.com/s/1KX7m0g9mgACoTMgkbIjRvw) (提取码：oq5w)。
 
-***test-datasets-os*** (原始图片大小，142MB)，[GoogleDrive](https://drive.google.com/drive/folders/1p--uTLIF-2hRIJk9Xmys9ftTdXrWYslS?usp=sharing) | [BaiduYun](https://pan.baidu.com/s/1kDv7icEDT5pPwQQJkHkgpA) (提取码：ujdl)。
+* ***test-datasets-os*** (原始图片大小，142MB)，[GoogleDrive](https://drive.google.com/drive/folders/1p--uTLIF-2hRIJk9Xmys9ftTdXrWYslS?usp=sharing) | [BaiduYun](https://pan.baidu.com/s/1kDv7icEDT5pPwQQJkHkgpA) (提取码：ujdl)。
 
 ### 最近发布的数据集：
 
@@ -42,7 +42,7 @@
 
 我们提供了预训练的 ICNet，其使用的 SISMs 是由预训练的 [EGNet](https://github.com/JXingZhao/EGNet) (基于VGG16) 产生的。
 
-***ICNet_vgg16.pth*** (70MB)，[GoogleDrive](https://drive.google.com/file/d/1wcT_XmwlshbLqCiJetmzQwi1ZNAzxiSU/view?usp=sharing) | [BaiduYun](https://pan.baidu.com/s/1__iiBcAI2S-Ns9MZnZwp8g) (提取码：nkj9)。
+* ***ICNet_vgg16.pth*** (70MB)，[GoogleDrive](https://drive.google.com/file/d/1wcT_XmwlshbLqCiJetmzQwi1ZNAzxiSU/view?usp=sharing) | [BaiduYun](https://pan.baidu.com/s/1__iiBcAI2S-Ns9MZnZwp8g) (提取码：nkj9)。
 
 ## 预测结果
 
@@ -50,9 +50,9 @@
 
 ***MSRC***、***iCoseg***、***Cosal2015***、***CoCA*** 和 ***CoSOD3k***。
 
-***cosal-maps.zip*** (224*224分辨率，由模型直接输出，20MB)，[GoogleDrive](https://drive.google.com/file/d/1q9CAzPf5U3VPa_DGxzUGI_DANCuw_WEk/view?usp=sharing) | [BaiduYun](https://pan.baidu.com/s/1qbPJKMTiVStqjSGYWuqSgQ) (提取码：du5e)。
+* ***cosal-maps.zip*** (224*224分辨率，由模型直接输出，20MB)，[GoogleDrive](https://drive.google.com/file/d/1q9CAzPf5U3VPa_DGxzUGI_DANCuw_WEk/view?usp=sharing) | [BaiduYun](https://pan.baidu.com/s/1qbPJKMTiVStqjSGYWuqSgQ) (提取码：du5e)。
 
-***cosal-maps-os.zip*** (放缩至原始图片大小，62MB)，[GoogleDrive](https://drive.google.com/file/d/1px4tPVWAgbBPMt6Rp23oNwWz8Ulj6pmX/view?usp=sharing) | [BaiduYun](https://pan.baidu.com/s/1WFQxeIOjOiByiFYHLpuytA) (提取码：xwcv)。
+* ***cosal-maps-os.zip*** (放缩至原始图片大小，62MB)，[GoogleDrive](https://drive.google.com/file/d/1px4tPVWAgbBPMt6Rp23oNwWz8Ulj6pmX/view?usp=sharing) | [BaiduYun](https://pan.baidu.com/s/1WFQxeIOjOiByiFYHLpuytA) (提取码：xwcv)。
 
 ## 训练和测试
 
@@ -62,13 +62,13 @@ ICNet 可以基于任意现成 SOD 方法产生的 SISMs 进行训练和测试�
 
 在论文中，我们选择预训练的 [EGNet](https://github.com/JXingZhao/EGNet) (基于VGG16) 作为基础 SOD 模型来产生 SISMs。您可以直接从下面的链接下载这些已经生成好的 SISMs：
 
-***EGNet-SISMs*** (放缩至224*224，125MB)，[GoogleDrive](https://drive.google.com/drive/folders/1cGtXQI2U8pH37-mgSw3otnMsRi36QwBp?usp=sharing) | [BaiduYun](https://pan.baidu.com/s/11xJz-_TPXaL0cnwUYFUOsw) (提取码：xc5k)。
+* ***EGNet-SISMs*** (放缩至224*224，125MB)，[GoogleDrive](https://drive.google.com/drive/folders/1cGtXQI2U8pH37-mgSw3otnMsRi36QwBp?usp=sharing) | [BaiduYun](https://pan.baidu.com/s/11xJz-_TPXaL0cnwUYFUOsw) (提取码：xc5k)。
 
 ### 训练
 
 1. 下载预训练的 VGG16：
 
-   ***vgg16_feat.pth*** (56MB)，[GoogleDrive](https://drive.google.com/file/d/1ej5ngj2NYH-R-0GfYUDfuM-DNLuFolED/view?usp=sharing) | [BaiduYun](https://pan.baidu.com/s/1S_D6qCE2vn_okBhT1Zg72g) (提取码：imsf)。
+   * ***vgg16_feat.pth*** (56MB)，[GoogleDrive](https://drive.google.com/file/d/1ej5ngj2NYH-R-0GfYUDfuM-DNLuFolED/view?usp=sharing) | [BaiduYun](https://pan.baidu.com/s/1S_D6qCE2vn_okBhT1Zg72g) (提取码：imsf)。
 
 2. 根据 **"./ICNet/train.py"** 中的说明修改训练设置。
 
@@ -128,7 +128,7 @@ python ./ICNet/evaluate.py
 
 您可以从下面的链接下载这些方法产生的预测结果图：
 
-***compared_method*s** (原始图片大小，445MB)，[GoogleDrive](https://drive.google.com/drive/folders/1qdXWZQ-fF-WaCF-rat0Da7vFrAIYsj09?usp=sharing) | [BaiduYun](https://pan.baidu.com/s/10vpubz39atkg2lz095QvSQ) (提取码：s7pr)。
+* ***compared_method*s** (原始图片大小，445MB)，[GoogleDrive](https://drive.google.com/drive/folders/1qdXWZQ-fF-WaCF-rat0Da7vFrAIYsj09?usp=sharing) | [BaiduYun](https://pan.baidu.com/s/10vpubz39atkg2lz095QvSQ) (提取码：s7pr)。
 
 ## 引用
 
