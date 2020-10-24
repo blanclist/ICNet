@@ -4,7 +4,7 @@ This repository is the official PyTorch implementation of our *NeurIPS(2020)* pa
 
 You can switch the branch to "CN", to view README.md (Chinese version) and obtain codes with Chinese comments.
 
-(您可以将 branch 切换到 "CN", 以查看中文版 README.md 并获取带有中文注释的代码)
+(您可以将 branch 切换到 "CN"，以查看中文版 README.md 并获取带有中文注释的代码)
 
 <div align=center><img width="450" height="300" src=./thumbnail.png/></div>
 
@@ -28,9 +28,9 @@ You can switch the branch to "CN", to view README.md (Chinese version) and obtai
 
 You can download them from:
 
-***test-datasets*** (resized to 224*224, 77MB) [GoogleDrive](https://drive.google.com/drive/folders/1bjI2msek72dOejmK796tXyjFPIE27267?usp=sharing) | [BaiduYun](https://pan.baidu.com/s/1KX7m0g9mgACoTMgkbIjRvw) (fetch code: oq5w).
+***test-datasets*** (resized to 224*224, 77MB), [GoogleDrive](https://drive.google.com/drive/folders/1bjI2msek72dOejmK796tXyjFPIE27267?usp=sharing) | [BaiduYun](https://pan.baidu.com/s/1KX7m0g9mgACoTMgkbIjRvw) (fetch code: oq5w).
 
-***test-datasets-os*** (original sizes, 142MB) [GoogleDrive](https://drive.google.com/drive/folders/1p--uTLIF-2hRIJk9Xmys9ftTdXrWYslS?usp=sharing) | [BaiduYun](https://pan.baidu.com/s/1kDv7icEDT5pPwQQJkHkgpA) (fetch code: ujdl).
+***test-datasets-os*** (original sizes, 142MB), [GoogleDrive](https://drive.google.com/drive/folders/1p--uTLIF-2hRIJk9Xmys9ftTdXrWYslS?usp=sharing) | [BaiduYun](https://pan.baidu.com/s/1kDv7icEDT5pPwQQJkHkgpA) (fetch code: ujdl).
 
 ### Released recently:
 
@@ -62,13 +62,13 @@ Our ICNet can be trained and tested based on SISMs produced by any off-the-shelf
 
 In our paper, we choose the pre-trained [EGNet](https://github.com/JXingZhao/EGNet) (VGG16-based) as the basic SOD method to produce SISMs, you can downloaded these SISMs directly from:
 
-***EGNet-SISMs*** (resized to 224*224, 125MB) [GoogleDrive](https://drive.google.com/drive/folders/1cGtXQI2U8pH37-mgSw3otnMsRi36QwBp?usp=sharing) | [BaiduYun](https://pan.baidu.com/s/11xJz-_TPXaL0cnwUYFUOsw) (fetch code: xc5k).
+***EGNet-SISMs*** (resized to 224*224, 125MB), [GoogleDrive](https://drive.google.com/drive/folders/1cGtXQI2U8pH37-mgSw3otnMsRi36QwBp?usp=sharing) | [BaiduYun](https://pan.baidu.com/s/11xJz-_TPXaL0cnwUYFUOsw) (fetch code: xc5k).
 
 ### Training
 
 1. Download pre-trained VGG16 from:
 
-   ***vgg16_feat.pth*** (56MB) [GoogleDrive](https://drive.google.com/file/d/1ej5ngj2NYH-R-0GfYUDfuM-DNLuFolED/view?usp=sharing) | [BaiduYun](https://pan.baidu.com/s/1S_D6qCE2vn_okBhT1Zg72g) (fetch code: imsf).
+   ***vgg16_feat.pth*** (56MB), [GoogleDrive](https://drive.google.com/file/d/1ej5ngj2NYH-R-0GfYUDfuM-DNLuFolED/view?usp=sharing) | [BaiduYun](https://pan.baidu.com/s/1S_D6qCE2vn_okBhT1Zg72g) (fetch code: imsf).
 
 2. Follow instructions in **"./ICNet/train.py"** to modify training settings.
 
@@ -98,7 +98,7 @@ python ./ICNet/test.py
 
 ## Evaluation
 
-The folder "./ICNet/evaluator/" contains evaluation codes implemented in PyTorch (GPU-version), the metrics include **max F-measure**, **S-measure** and **MAE**. 
+The folder "./ICNet/evaluator/" contains evaluation codes implemented in PyTorch (GPU-version), the metrics include **max F-measure**, **S-measure**, and **MAE**. 
 
 1. Follow instructions in **"./ICNet/evaluate.py"** to modify evaluation settings.
 
@@ -128,7 +128,7 @@ We compare our ICNet with 7 state-of-the-art Co-SOD methods:
 
 You can download predictions of these methods from:
 
-***compared_method*s** (original sizes, 445MB) [GoogleDrive](https://drive.google.com/drive/folders/1qdXWZQ-fF-WaCF-rat0Da7vFrAIYsj09?usp=sharing) | [BaiduYun](https://pan.baidu.com/s/10vpubz39atkg2lz095QvSQ) (fetch code: s7pr).
+***compared_method*s** (original sizes, 445MB), [GoogleDrive](https://drive.google.com/drive/folders/1qdXWZQ-fF-WaCF-rat0Da7vFrAIYsj09?usp=sharing) | [BaiduYun](https://pan.baidu.com/s/10vpubz39atkg2lz095QvSQ) (fetch code: s7pr).
 
 ## Citation
 
