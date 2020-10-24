@@ -2,9 +2,9 @@
 
 This repository is the official PyTorch implementation of our *NeurIPS(2020)* paper.
 
-You can view this page in Chinese by switching the branch to "ICNet-CN".
+You can view this page in Chinese by switching the branch to "CN".
 
-(您可以通过切换 branch 到 "ICNet-CN" 来查看中文界面)
+(您可以通过切换 branch 到 "CN" 来查看中文界面)
 
 <div align=center><img width="450" height="300" src=./thumbnail.png/></div>
 
@@ -70,12 +70,12 @@ In our paper, we choose the pre-trained [EGNet](https://github.com/JXingZhao/EGN
 
    ***vgg16_feat.pth*** (56MB) [GoogleDrive](https://drive.google.com/file/d/1ej5ngj2NYH-R-0GfYUDfuM-DNLuFolED/view?usp=sharing) | [BaiduYun](https://pan.baidu.com/s/1S_D6qCE2vn_okBhT1Zg72g) (fetch code: imsf).
 
-2. Follow instructions in **"./ICNet/codes/train.py"** to modify training settings.
+2. Follow instructions in **"./ICNet/train.py"** to modify training settings.
 
 3. Run:
 
 ```
-python ./ICNet/codes/train.py
+python ./ICNet/train.py
 ```
 
 ### Test
@@ -88,24 +88,24 @@ python ./ICNet/codes/train.py
 
      Choose the checkpoint file ***"Weights_i.pth"***  (saved after i-th epoch automatically) you want to load for the test.
 
-2. Follow instructions in **"./ICNet/codes/test.py"** to modify test settings.
+2. Follow instructions in **"./ICNet/test.py"** to modify test settings.
 
 3. Run:
 
 ```
-python ./ICNet/codes/test.py
+python ./ICNet/test.py
 ```
 
 ## Evaluation
 
-The folder "./ICNet/codes/evaluator/" contains evaluation codes implemented in PyTorch (GPU-version), the metrics include **max F-measure**, **S-measure** and **MAE**. 
+The folder "./ICNet/evaluator/" contains evaluation codes implemented in PyTorch (GPU-version), the metrics include **max F-measure**, **S-measure** and **MAE**. 
 
-1. Follow instructions in **"./ICNet/codes/evaluate.py"** to modify evaluation settings.
+1. Follow instructions in **"./ICNet/evaluate.py"** to modify evaluation settings.
 
 2. Run:
 
 ```
-python ./ICNet/codes/evaluate.py
+python ./ICNet/evaluate.py
 ```
 
 ## Compared Methods
