@@ -137,8 +137,7 @@ class Cosal_Sub_Module(nn.Module):
         def CFM(SIVs, NFs):
             # Compute correlation maps [Figure 4] between SIVs and pixel-wise feature vectors in NFs by inner product.
             # We implement this process by ``F.conv2d()'', which takes SIVs as 1*1 kernels to convolve NFs.
-            NFs = NFs.permute(1, 2, 3, 0).reshape(1, C, HW, N)  # shape=[1, C, HW, N]
-            correlation_maps = F.conv2d(NFs, weight=SIVs).permute(3, 1, 2, 0)  # shape=[N, N, HW, 1]
+            correlation_maps = F.conv2d(NFs, weight=SIVs)  # shape=[N, N, H, W]
             
             # Vectorize and normalize correlation maps.
             correlation_maps = F.normalize(correlation_maps.reshape(N, N, HW), dim=2)  # shape=[N, N, HW]
