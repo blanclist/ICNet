@@ -137,8 +137,7 @@ class Cosal_Sub_Module(nn.Module):
         def CFM(SIVs, NFs):
             # 计算SIVs和NFs中每个像素的内积, 产生correlation maps [图4].
             # 我们通过 ``F.conv2d()'' 来实现这一过程, 其中将SIVs作为1*1卷积的参数对NFs进行卷积.
-            NFs = NFs.permute(1, 2, 3, 0).reshape(1, C, HW, N)  # shape=[1, C, HW, N]
-            correlation_maps = F.conv2d(NFs, weight=SIVs).permute(3, 1, 2, 0)  # shape=[N, N, HW, 1]
+            correlation_maps = F.conv2d(NFs, weight=SIVs)  # shape=[N, N, H, W]
             
             # 向量化(vectorize)并标准化(normalize) correlation maps.
             correlation_maps = F.normalize(correlation_maps.reshape(N, N, HW), dim=2)  # shape=[N, N, HW]
