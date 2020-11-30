@@ -62,13 +62,13 @@ ICNet 可以基于任意现成 SOD 方法产生的 SISMs 进行训练和测试�
 
 在论文中，我们选择预训练的 [EGNet](https://github.com/JXingZhao/EGNet) (基于VGG16) 作为基础 SOD 模型来产生 SISMs。您可以直接从下面的链接下载这些已经生成好的 SISMs：
 
-* ***EGNet-SISMs*** (放缩至224*224，125MB)，[GoogleDrive](https://drive.google.com/drive/folders/1cGtXQI2U8pH37-mgSw3otnMsRi36QwBp?usp=sharing) | [BaiduYun](https://pan.baidu.com/s/11xJz-_TPXaL0cnwUYFUOsw) (提取码：xc5k)。
+* ***EGNet-SISMs*** (放缩至224*224，125MB)，[GoogleDrive](https://drive.google.com/drive/folders/1cGtXQI2U8pH37-mgSw3otnMsRi36QwBp?usp=sharing) | [BaiduYun](https://pan.baidu.com/s/19Izo6i7A9DfUMzsNbVec6g) (提取码：ae6a)。
 
 ### 训练
 
 1. 下载预训练的 VGG16：
 
-   * ***vgg16_feat.pth*** (56MB)，[GoogleDrive](https://drive.google.com/file/d/1ej5ngj2NYH-R-0GfYUDfuM-DNLuFolED/view?usp=sharing) | [BaiduYun](https://pan.baidu.com/s/1S_D6qCE2vn_okBhT1Zg72g) (提取码：imsf)。
+   * ***vgg16_feat.pth*** (56MB)，[GoogleDrive](https://drive.google.com/file/d/1ej5ngj2NYH-R-0GfYUDfuM-DNLuFolED/view?usp=sharing) | [BaiduYun](https://pan.baidu.com/s/1kAh7FAUPuVLI5cvtBsxh-A) (提取码：j0zq)。
 
 2. 根据 **"./ICNet/train.py"** 中的说明修改训练设置。
 
