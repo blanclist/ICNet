@@ -62,13 +62,13 @@ Our ICNet can be trained and tested based on SISMs produced by any off-the-shelf
 
 In our paper, we choose the pre-trained [EGNet](https://github.com/JXingZhao/EGNet) (VGG16-based) as the basic SOD method to produce SISMs, you can downloaded these SISMs directly from:
 
-* ***EGNet-SISMs*** (resized to 224*224, 125MB), [GoogleDrive](https://drive.google.com/drive/folders/1cGtXQI2U8pH37-mgSw3otnMsRi36QwBp?usp=sharing) | [BaiduYun](https://pan.baidu.com/s/11xJz-_TPXaL0cnwUYFUOsw) (fetch code: xc5k).
+* ***EGNet-SISMs*** (resized to 224*224, 125MB), [GoogleDrive](https://drive.google.com/drive/folders/1cGtXQI2U8pH37-mgSw3otnMsRi36QwBp?usp=sharing) | [BaiduYun](https://pan.baidu.com/s/19Izo6i7A9DfUMzsNbVec6g) (fetch code: ae6a).
 
 ### Training
 
 1. Download pre-trained VGG16 from:
 
-   * ***vgg16_feat.pth*** (56MB), [GoogleDrive](https://drive.google.com/file/d/1ej5ngj2NYH-R-0GfYUDfuM-DNLuFolED/view?usp=sharing) | [BaiduYun](https://pan.baidu.com/s/1S_D6qCE2vn_okBhT1Zg72g) (fetch code: imsf).
+   * ***vgg16_feat.pth*** (56MB), [GoogleDrive](https://drive.google.com/file/d/1ej5ngj2NYH-R-0GfYUDfuM-DNLuFolED/view?usp=sharing) | [BaiduYun](https://pan.baidu.com/s/1kAh7FAUPuVLI5cvtBsxh-A) (fetch code: j0zq).
 
 2. Follow instructions in **"./ICNet/train.py"** to modify training settings.
 
