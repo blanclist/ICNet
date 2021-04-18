@@ -178,7 +178,7 @@ class Cosal_Sub_Module(nn.Module):
         return cosal_feat
 
 """
-Refinement:
+Decoder_Block:
     U-net风格的decoder block, 融合co-saliency features和low-level features以进行上采样.
 """
 class Decoder_Block(nn.Module):
