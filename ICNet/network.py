@@ -178,7 +178,7 @@ class Cosal_Sub_Module(nn.Module):
         return cosal_feat
 
 """
-Refinement:
+Decoder_Block:
     U-net like decoder block that fuses co-saliency features and low-level features for upsampling. 
 """
 class Decoder_Block(nn.Module):
